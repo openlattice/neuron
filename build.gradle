@@ -1,0 +1,117 @@
+plugins {
+  id 'application'
+  id 'java'
+  id 'eclipse'
+  id 'idea'
+  id 'jacoco'
+}
+
+description = "Loom Neuron Server"
+group = "com.kryptnostic"
+ext.projectName = "neuron"
+ext.scmUrl = 'scm:git:https://github.com/dataloom/neuron.git'
+ext.connectionUrl = 'scm:git:https://github.com/dataloom/neuron.git'
+ext.developerConnectionUrl = 'scm:git:https://github.com/dataloom/neuron.git'
+
+distTar {
+  archiveName "$baseName" + ".tgz"
+}
+
+apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptnostic.gradle"
+
+mainClassName = "com.dataloom.datastore.Datastore"
+
+def DS_XMS = "$System.env.DATASTORE_XMS"
+def DS_XMX = "$System.env.DATASTORE_XMX"
+
+if( DS_XMS == 'null' || DS_XMS == null || DS_XMS == "" ) {
+    DS_XMS = '-Xms1g'
+}
+
+if( DS_XMX == 'null' || DS_XMX == null || DS_XMX == "" ) {
+    DS_XMX = '-Xms4g'
+}
+
+println "Using java args for running ${projectName}: Xms=" + DS_XMS + ",Xmx=" + DS_XMX + " -server"
+
+applicationDefaultJvmArgs = [DS_XMS, DS_XMX, "-server"]
+sourceCompatibility=JavaVersion.VERSION_1_8
+targetCompatibility=JavaVersion.VERSION_1_8
+/*
+ * Copyright (C) 2017. Kryptnostic, Inc (dba Loom)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * You can contact the owner of the copyright at support@thedataloom.com
+ */
+
+/*
+run {
+  if (System.getProperty("exec.args")) {
+    args System.getProperty("exec.args").split()
+  }
+}
+*/
+run.args = ["local","cassandra"]
+
+configurations {
+    tests
+      published.extendsFrom tests, archives
+}
+
+ext.odata_version='4.2.0'
+dependencies {
+
+    if( project.hasProperty('developmentMode') && project.developmentMode ) {
+        logger.quiet(project.name + " using project dependencies.")
+        compile project(":rhizome")
+        compile project(":conductor-client")
+        compile project(":loom-api")
+        testCompile( project(path: ":loom-api", configuration: "tests"))
+        testCompile( project(path: ":rhizome", configuration: "tests"))
+        testCompile( project(path: ":rhizome-client", configuration: "tests"))
+    } else {
+        logger.quiet(project.name + " using jar dependencies.")
+        compile "com.kryptnostic:rhizome:${rhizome_version}"
+        compile "com.kryptnostic:conductor-client:${conductor_client_version}"
+        compile ("com.kryptnostic:loom-api:${loom_api_version}")
+        testCompile "com.kryptnostic:loom-api:${loom_api_version}:tests"
+        testCompile "com.kryptnostic:rhizome:${rhizome_version}:tests"
+        testCompile "com.kryptnostic:rhizome-client:${rhizome_client_version}:tests"
+    }
+
+    compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: "${cassandra_driver_version}"
+    compile "org.apache.olingo:odata-server-api:${odata_version}"
+    compile "org.apache.olingo:odata-server-core:${odata_version}"
+    compile "org.apache.olingo:odata-commons-api:${odata_version}"
+    compile "org.apache.olingo:odata-commons-core:${odata_version}"
+
+    /*
+     * TESTING
+     */
+    testCompile "junit:junit:${junit_version}"
+    testCompile "org.cassandraunit:cassandra-unit:3.1.1.0"
+    testCompile( "org.mockito:mockito-all:${mockito_version}" ) {
+        exclude module : 'hamcrest'
+        exclude module : 'hamcrest-core'
+    }
+}
+
+eclipse {
+    ext.downloadSources = true
+    ext.downloadJavadoc = true
+
+    ext.sourceCompatibility=JavaVersion.VERSION_1_8
+    ext.targetCompatibility=JavaVersion.VERSION_1_8
+}
