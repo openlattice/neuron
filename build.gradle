@@ -19,7 +19,7 @@ distTar {
 
 apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptnostic.gradle"
 
-mainClassName = "com.dataloom.datastore.Datastore"
+mainClassName = "com.dataloom.neuron.Neuron"
 
 def DS_XMS = "$System.env.DATASTORE_XMS"
 def DS_XMX = "$System.env.DATASTORE_XMX"
