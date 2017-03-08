@@ -19,29 +19,28 @@
 
 package com.dataloom.neuron;
 
+import com.dataloom.neuron.pods.NeuronSecurityPod;
+import com.dataloom.neuron.pods.NeuronServicesPod;
+import com.dataloom.neuron.pods.NeuronServletsPod;
 import com.kryptnostic.rhizome.configuration.websockets.BaseRhizomeServer;
 import com.kryptnostic.rhizome.hazelcast.serializers.RhizomeUtils.Pods;
-import com.kryptnostic.rhizome.pods.CassandraPod;
-import com.kryptnostic.rhizome.pods.hazelcast.RegistryBasedHazelcastInstanceConfigurationPod;
-import digital.loom.rhizome.authentication.Auth0Pod;
+
+import static com.kryptnostic.rhizome.core.RhizomeApplicationServer.DEFAULT_PODS;
 
 public class Neuron extends BaseRhizomeServer {
 
-    public static final Class<?>[] rhizomePods = new Class<?>[] {
-            Auth0Pod.class,
-            CassandraPod.class,
-            RegistryBasedHazelcastInstanceConfigurationPod.class
-    };
-
     public static final Class<?>[] neuronPods = new Class<?>[] {
-
+            NeuronSecurityPod.class,
+            NeuronServicesPod.class,
+            NeuronServletsPod.class
     };
 
     public Neuron( Class<?>... pods ) {
 
         super( Pods.concatenate(
                 pods,
-                rhizomePods
+                DEFAULT_PODS,
+                neuronPods
         ) );
     }
 
