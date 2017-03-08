@@ -20,6 +20,7 @@
 package com.dataloom.neuron.pods;
 
 import com.auth0.spring.security.api.Auth0CORSFilter;
+import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
 import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
 import digital.loom.rhizome.configuration.auth0.Auth0Roles;
 import org.springframework.context.annotation.Configuration;
@@ -31,16 +32,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 import digital.loom.rhizome.authentication.Auth0SecurityPod;
 
+import javax.inject.Inject;
+
 @Configuration
 @EnableGlobalMethodSecurity( prePostEnabled = true )
 @EnableWebSecurity( debug = false )
 public class NeuronSecurityPod extends Auth0SecurityPod {
 
+    @Inject
+    protected RhizomeConfiguration rhizomeConfiguration;
+
     @Override
     protected Auth0CORSFilter getAuth0CORSFilter() {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin( "http://localhost:9000" );
+        headers.setAccessControlAllowOrigin( rhizomeConfiguration.getCORSAccessControlAllowOriginUrl() );
         headers.setAccessControlAllowCredentials( true );
 
         return new ConfigurableAuth0CORSFilter( headers );

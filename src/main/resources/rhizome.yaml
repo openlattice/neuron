@@ -6,6 +6,8 @@
 enable-persistence:  false
 session-clustering-enabled: false
 
+cors-access-control-allow-origin-url: "http://localhost:9000"
+
 cassandra:
     embedded: true
     random-ports: true
