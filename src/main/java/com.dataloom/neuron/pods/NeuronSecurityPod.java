@@ -20,19 +20,24 @@
 package com.dataloom.neuron.pods;
 
 import com.auth0.spring.security.api.Auth0CORSFilter;
+import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
+import com.dataloom.authorization.Role;
 import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
+import digital.loom.rhizome.authentication.Auth0SecurityPod;
+import digital.loom.rhizome.authentication.ConfigurableAuth0AuthenticationProvider;
 import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
-import digital.loom.rhizome.configuration.auth0.Auth0Roles;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
-import digital.loom.rhizome.authentication.Auth0SecurityPod;
+import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.StaticAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 import javax.inject.Inject;
+import java.net.URI;
 
 @Configuration
 @EnableGlobalMethodSecurity( prePostEnabled = true )
@@ -41,6 +46,11 @@ public class NeuronSecurityPod extends Auth0SecurityPod {
 
     @Inject
     protected RhizomeConfiguration rhizomeConfiguration;
+
+    @Override
+    protected ConfigurableAuth0AuthenticationProvider getAuthenticationProvider() {
+        return new LoomAuth0AuthenticationProvider( getAuthenticationApiClient() );
+    }
 
     @Override
     protected Auth0CORSFilter getAuth0CORSFilter() {
@@ -55,14 +65,22 @@ public class NeuronSecurityPod extends Auth0SecurityPod {
     @Override
     protected void authorizeRequests( HttpSecurity http ) throws Exception {
 
+        String allowedOrigin = rhizomeConfiguration.getCORSAccessControlAllowOriginUrl();
+        AllowFromStrategy allowFromStrategy = new StaticAllowFromStrategy( URI.create( allowedOrigin ) );
+
         // @formatter:off
-        http.authorizeRequests()
-                .antMatchers( HttpMethod.OPTIONS ).permitAll()
-                .antMatchers( "/neuron/**" ).hasAnyAuthority(
-                        Auth0Roles.ADMIN_LO,
-                        Auth0Roles.ADMIN_UP,
-                        Auth0Roles.AUTHENTICATED_USER
-                );
+        http
+                .headers()
+                    .frameOptions().disable()
+                    .addHeaderWriter( new XFrameOptionsHeaderWriter( allowFromStrategy ) )
+                    .and()
+                .authorizeRequests()
+                    .antMatchers( HttpMethod.OPTIONS ).permitAll()
+                    .antMatchers( "/neuron/**" ).hasAnyAuthority(
+                            Role.ADMIN.getPrincipal().getId(),
+                            Role.ADMIN.getPrincipal().getId().toUpperCase(),
+                            Role.AUTHENTICATED_USER.getPrincipal().getId()
+                    );
         // @formatter:on
     }
 }
