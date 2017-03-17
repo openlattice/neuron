@@ -19,14 +19,15 @@
 
 package com.dataloom.neuron.pods;
 
+import com.dataloom.neuron.configuration.WebSocketConfig;
 import com.dataloom.neuron.controllers.NeuronController;
-import com.kryptnostic.rhizome.pods.WebSocketPod;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+@Configuration
 @ComponentScan(
         basePackageClasses = {
                 NeuronController.class
@@ -36,6 +37,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
                 type = FilterType.ANNOTATION
         )
 )
-@Configuration
-@Import( WebSocketPod.class )
+@Import( WebSocketConfig.class )
 public class NeuronMvcPod extends WebMvcConfigurationSupport {}
