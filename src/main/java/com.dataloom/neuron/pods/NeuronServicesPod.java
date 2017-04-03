@@ -19,23 +19,26 @@
 
 package com.dataloom.neuron.pods;
 
+import javax.inject.Inject;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
 import com.dataloom.authorization.AuthorizationManager;
 import com.dataloom.authorization.AuthorizationQueryService;
 import com.dataloom.authorization.HazelcastAuthorizationService;
 import com.dataloom.mappers.ObjectMappers;
+import com.dataloom.organizations.roles.TokenExpirationTracker;
 import com.datastax.driver.core.Session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.EventBus;
 import com.hazelcast.core.HazelcastInstance;
 import com.kryptnostic.rhizome.configuration.cassandra.CassandraConfiguration;
 import com.kryptnostic.rhizome.pods.CassandraPod;
+
 import digital.loom.rhizome.authentication.Auth0Pod;
 import digital.loom.rhizome.configuration.auth0.Auth0Configuration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
-import javax.inject.Inject;
 
 @Configuration
 @Import( {
@@ -74,4 +77,8 @@ public class NeuronServicesPod {
         return new HazelcastAuthorizationService( hazelcastInstance, authorizationQueryService(), eventBus );
     }
 
+    @Bean
+    public TokenExpirationTracker tokenTracker(){
+        return new TokenExpirationTracker( hazelcastInstance );
+    }
 }

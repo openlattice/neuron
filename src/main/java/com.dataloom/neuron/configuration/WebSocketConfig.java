@@ -31,6 +31,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_APPLICATION_DESTINATION_PATH;
+import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_BROKER_PATH;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
@@ -38,15 +41,15 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker( MessageBrokerRegistry registry ) {
 
-        registry.enableSimpleBroker( "/topic" );
-        registry.setApplicationDestinationPrefixes( "/" );
+        registry.enableSimpleBroker( DEFAULT_BROKER_PATH );
+        registry.setApplicationDestinationPrefixes( DEFAULT_APPLICATION_DESTINATION_PATH );
     }
 
     @Override
     public void registerStompEndpoints( StompEndpointRegistry registry ) {
 
         registry
-                .addEndpoint( "/" )
+                .addEndpoint( DEFAULT_APPLICATION_DESTINATION_PATH )
                 .setAllowedOrigins( "*" )
                 .setHandshakeHandler( handshakeHandler() )
                 .withSockJS();

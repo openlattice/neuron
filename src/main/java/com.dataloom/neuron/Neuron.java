@@ -19,6 +19,7 @@
 
 package com.dataloom.neuron;
 
+import com.dataloom.neuron.pods.NeuronQueueStoresPod;
 import com.dataloom.neuron.pods.NeuronSecurityPod;
 import com.dataloom.neuron.pods.NeuronServicesPod;
 import com.dataloom.neuron.pods.NeuronServletsPod;
@@ -37,6 +38,7 @@ public class Neuron extends BaseRhizomeServer {
     };
 
     public static final Class<?>[] neuronPods = new Class<?>[] {
+            NeuronQueueStoresPod.class,
             NeuronSecurityPod.class,
             NeuronServicesPod.class,
             NeuronServletsPod.class

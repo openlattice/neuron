@@ -19,13 +19,9 @@
 
 package com.dataloom.neuron.pods;
 
-import com.auth0.spring.security.api.Auth0CORSFilter;
-import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
-import com.dataloom.authorization.Role;
-import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
-import digital.loom.rhizome.authentication.Auth0SecurityPod;
-import digital.loom.rhizome.authentication.ConfigurableAuth0AuthenticationProvider;
-import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
+import java.net.URI;
+import javax.inject.Inject;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,8 +32,15 @@ import org.springframework.security.web.header.writers.frameoptions.AllowFromStr
 import org.springframework.security.web.header.writers.frameoptions.StaticAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
-import javax.inject.Inject;
-import java.net.URI;
+import com.auth0.spring.security.api.Auth0CORSFilter;
+import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
+import com.dataloom.authorization.Role;
+import com.dataloom.organizations.roles.TokenExpirationTracker;
+import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
+
+import digital.loom.rhizome.authentication.Auth0SecurityPod;
+import digital.loom.rhizome.authentication.ConfigurableAuth0AuthenticationProvider;
+import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity( prePostEnabled = true )
@@ -47,9 +50,12 @@ public class NeuronSecurityPod extends Auth0SecurityPod {
     @Inject
     protected RhizomeConfiguration rhizomeConfiguration;
 
+    @Inject
+    TokenExpirationTracker tokenTracker;
+
     @Override
     protected ConfigurableAuth0AuthenticationProvider getAuthenticationProvider() {
-        return new LoomAuth0AuthenticationProvider( getAuthenticationApiClient() );
+        return new LoomAuth0AuthenticationProvider( getAuthenticationApiClient(), tokenTracker );
     }
 
     @Override

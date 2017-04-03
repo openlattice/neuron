@@ -19,21 +19,27 @@
 
 package com.dataloom.neuron.pods;
 
-import com.dataloom.neuron.configuration.WebSocketConfig;
-import com.dataloom.neuron.controllers.NeuronController;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.dataloom.neuron.configuration.WebSocketConfig;
+import com.dataloom.neuron.controllers.NeuronController;
+import com.dataloom.neuron.synapses.NotificationsSynapse;
+
 @Configuration
 @ComponentScan(
         basePackageClasses = {
-                NeuronController.class
+                NeuronController.class,
+                NotificationsSynapse.class
         },
         includeFilters = @ComponentScan.Filter(
-                value = { org.springframework.stereotype.Controller.class },
+                value = {
+                        org.springframework.stereotype.Component.class,
+                        org.springframework.stereotype.Controller.class
+                },
                 type = FilterType.ANNOTATION
         )
 )
