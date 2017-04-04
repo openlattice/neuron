@@ -44,4 +44,7 @@ public class NeuronController implements NeuronApi, AuthorizingComponent {
         return authorizationManager;
     }
 
+    /*
+     * TODO: this Controller doesn't do anything yet
+     */
 }
