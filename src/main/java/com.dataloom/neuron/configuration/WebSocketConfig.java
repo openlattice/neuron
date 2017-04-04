@@ -65,4 +65,9 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         return new DefaultHandshakeHandler( new JettyRequestUpgradeStrategy( new WebSocketServerFactory( policy ) ) );
     }
 
+    // TODO: figure out if this needs to be implemented for token-based auth:
+    // https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/websocket.html#websocket-stomp-authentication-token-based
+    // @Override
+    // public void configureClientInboundChannel( ChannelRegistration registration ) {}
+
 }

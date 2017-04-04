@@ -1,5 +1,6 @@
 package com.dataloom.neuron.pods;
 
+import com.dataloom.neuron.Signal;
 import com.dataloom.neuron.synapses.NotificationsSynapseQueueStore;
 import com.datastax.driver.core.Session;
 import com.kryptnostic.rhizome.queuestores.SelfRegisteringQueueStore;
@@ -16,7 +17,7 @@ public class NeuronQueueStoresPod {
     private Session session;
 
     @Bean
-    public SelfRegisteringQueueStore<EventObject> signalsQueueStore() {
+    public SelfRegisteringQueueStore signalsQueueStore() {
 
         return new NotificationsSynapseQueueStore( session );
     }
