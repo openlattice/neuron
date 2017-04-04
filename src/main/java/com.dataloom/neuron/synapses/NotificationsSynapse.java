@@ -48,7 +48,7 @@ public class NotificationsSynapse implements Synapse {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @Scheduled( fixedDelay = 1000, fixedRate = 1000 )
+    @Scheduled( fixedDelay = 1000 )
     public void transmit() {
 
         IQueue<Signal> notifications = hazelcastInstance.getQueue( NeuronSynapses.NOTIFICATIONS.name() );
