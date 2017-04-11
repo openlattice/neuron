@@ -19,11 +19,14 @@
 
 package com.dataloom.neuron.configuration;
 
+import javax.inject.Inject;
+
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.eclipse.jetty.websocket.server.WebSocketServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -31,12 +34,18 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+import com.dataloom.authorization.AuthorizationManager;
+import com.dataloom.neuron.configuration.interceptors.AclKeySynapseInterceptor;
+
 import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_APPLICATION_DESTINATION_PATH;
 import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_BROKER_PATH;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+
+    @Inject
+    private AuthorizationManager authorizationManager;
 
     @Override
     public void configureMessageBroker( MessageBrokerRegistry registry ) {
@@ -55,6 +64,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                 .withSockJS();
     }
 
+    @Override
+    public void configureClientInboundChannel( ChannelRegistration registration ) {
+
+        registration.setInterceptors( new AclKeySynapseInterceptor( authorizationManager ) );
+    }
+
     @Bean
     public DefaultHandshakeHandler handshakeHandler() {
 
@@ -64,10 +79,5 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
         return new DefaultHandshakeHandler( new JettyRequestUpgradeStrategy( new WebSocketServerFactory( policy ) ) );
     }
-
-    // TODO: figure out if this needs to be implemented for token-based auth:
-    // https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/websocket.html#websocket-stomp-authentication-token-based
-    // @Override
-    // public void configureClientInboundChannel( ChannelRegistration registration ) {}
 
 }

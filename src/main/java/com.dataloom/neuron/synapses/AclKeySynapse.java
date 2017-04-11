@@ -19,6 +19,8 @@
 
 package com.dataloom.neuron.synapses;
 
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -30,17 +32,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.dataloom.neuron.NeuronSynapses;
-import com.dataloom.neuron.Signal;
+import com.dataloom.neuron.signals.AclKeySignal;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IQueue;
 
-import static com.dataloom.neuron.constants.SynapseConstants.NOTIFICATIONS_SYNAPSE_PATH;
+import static com.dataloom.neuron.constants.SynapseConstants.ACL_KEY_SYNAPSE_PATH;
 
 @Component
 @EnableScheduling
-public class NotificationsSynapse implements Synapse {
+public class AclKeySynapse implements Synapse {
 
-    private static final Logger logger = LoggerFactory.getLogger( NotificationsSynapse.class );
+    private static final Logger logger = LoggerFactory.getLogger( AclKeySynapse.class );
 
     @Inject
     private HazelcastInstance hazelcastInstance;
@@ -48,17 +50,23 @@ public class NotificationsSynapse implements Synapse {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Override
     @Scheduled( fixedDelay = 1000 )
     public void transmit() {
 
-        IQueue<Signal> notifications = hazelcastInstance.getQueue( NeuronSynapses.NOTIFICATIONS.name() );
+        IQueue<AclKeySignal> aclKeyQueue = hazelcastInstance.getQueue( NeuronSynapses.ACL_KEY.name() );
 
         // TODO: or... while ( !notifications.isEmpty() )
         // TODO: multi-threading?
         while ( true ) {
             try {
-                Signal notification = notifications.take();
-                simpMessagingTemplate.convertAndSend( NOTIFICATIONS_SYNAPSE_PATH, notification );
+                AclKeySignal aclKeySignal = aclKeyQueue.take();
+                String aclKeyPath = aclKeySignal.getAclKey()
+                        .stream()
+                        .map( UUID::toString )
+                        .collect( Collectors.joining( "/" ) );
+                String destination = ACL_KEY_SYNAPSE_PATH + "/" + aclKeyPath;
+                simpMessagingTemplate.convertAndSend( destination, aclKeySignal );
             } catch ( InterruptedException e ) {
                 logger.error( e.getMessage(), e );
             }

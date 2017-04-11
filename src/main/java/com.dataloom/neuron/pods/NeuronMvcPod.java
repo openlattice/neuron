@@ -26,14 +26,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.dataloom.neuron.configuration.WebSocketConfig;
-import com.dataloom.neuron.controllers.NeuronController;
-import com.dataloom.neuron.synapses.NotificationsSynapse;
+import com.dataloom.neuron.configuration.WebSocketSecurityConfig;
 
 @Configuration
 @ComponentScan(
-        basePackageClasses = {
-                NeuronController.class,
-                NotificationsSynapse.class
+        basePackages = {
+                "com.dataloom.neuron.controllers",
+                "com.dataloom.neuron.synapses",
         },
         includeFilters = @ComponentScan.Filter(
                 value = {
@@ -43,5 +42,8 @@ import com.dataloom.neuron.synapses.NotificationsSynapse;
                 type = FilterType.ANNOTATION
         )
 )
-@Import( WebSocketConfig.class )
+@Import( {
+        WebSocketConfig.class,
+        WebSocketSecurityConfig.class
+} )
 public class NeuronMvcPod extends WebMvcConfigurationSupport {}

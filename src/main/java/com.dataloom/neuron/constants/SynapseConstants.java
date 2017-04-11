@@ -8,5 +8,6 @@ public class SynapseConstants {
     private SynapseConstants() {}
     // @formatter:on
 
-    public static final String NOTIFICATIONS_SYNAPSE_PATH = DEFAULT_BROKER_PATH + "/notifications";
+    public static final String SYNAPSE_PATH = DEFAULT_BROKER_PATH + "/synapse";
+    public static final String ACL_KEY_SYNAPSE_PATH = SYNAPSE_PATH + "/aclkey";
 }

@@ -78,7 +78,7 @@ public class NeuronServicesPod {
     }
 
     @Bean
-    public TokenExpirationTracker tokenTracker(){
+    public TokenExpirationTracker tokenTracker() {
         return new TokenExpirationTracker( hazelcastInstance );
     }
 }

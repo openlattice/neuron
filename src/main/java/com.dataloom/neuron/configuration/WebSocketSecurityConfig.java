@@ -17,31 +17,27 @@
  * You can contact the owner of the copyright at support@thedataloom.com
  */
 
-package com.dataloom.neuron.pods;
+package com.dataloom.neuron.configuration;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.google.common.collect.Lists;
-import com.kryptnostic.rhizome.configuration.servlets.DispatcherServletConfiguration;
+import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 
 @Configuration
-public class NeuronServletsPod {
+public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    public static final String   NEURON_SERVLET_NAME     = "neuron";
-    public static final String[] NEURON_SERVLET_MAPPINGS = new String[] { "/neuron/*" };
+    @Override
+    protected void configureInbound( MessageSecurityMetadataSourceRegistry messages ) {
 
-    public static final Integer LOAD_ON_STARTUP = 1;
-
-    @Bean
-    public DispatcherServletConfiguration neuronServlet() {
-
-        return new DispatcherServletConfiguration(
-                NEURON_SERVLET_NAME,
-                NEURON_SERVLET_MAPPINGS,
-                LOAD_ON_STARTUP,
-                Lists.newArrayList( NeuronMvcPod.class )
-        );
+        messages
+                .nullDestMatcher().authenticated()
+                .simpMessageDestMatchers( "/**" ).authenticated()
+                .simpSubscribeDestMatchers( "/**" ).authenticated()
+                .anyMessage().denyAll();
     }
 
+    @Override
+    protected boolean sameOriginDisabled() {
+        return true;
+    }
 }
