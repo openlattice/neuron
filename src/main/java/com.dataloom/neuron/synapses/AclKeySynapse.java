@@ -27,11 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.dataloom.neuron.NeuronSynapses;
+import com.dataloom.neuron.NeuronSynapse;
 import com.dataloom.neuron.signals.AclKeySignal;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IQueue;
@@ -50,22 +51,35 @@ public class AclKeySynapse implements Synapse {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private SimpUserRegistry simpUserRegistry;
+
     @Override
     @Scheduled( fixedDelay = 1000 )
     public void transmit() {
 
-        IQueue<AclKeySignal> aclKeyQueue = hazelcastInstance.getQueue( NeuronSynapses.ACL_KEY.name() );
-
-        // TODO: or... while ( !notifications.isEmpty() )
+        // TODO: IQueue is not a partitioned data-structure... will this be a problem?
+        // TODO: there must be a better way than @Scheduled to "start" the listening to the queue
         // TODO: multi-threading?
+
+        IQueue<AclKeySignal> aclKeyQueue = hazelcastInstance.getQueue( NeuronSynapse.ACL_KEY.getName() );
+
+        // TODO: or... while ( !queue.isEmpty() )
         while ( true ) {
             try {
                 AclKeySignal aclKeySignal = aclKeyQueue.take();
+
                 String aclKeyPath = aclKeySignal.getAclKey()
                         .stream()
                         .map( UUID::toString )
                         .collect( Collectors.joining( "/" ) );
+
                 String destination = ACL_KEY_SYNAPSE_PATH + "/" + aclKeyPath;
+
+                // Set<SimpSubscription> matchingSubscriptions = simpUserRegistry.findSubscriptions(
+                //         subscription -> subscription.getDestination().equals( destination )
+                // );
+
                 simpMessagingTemplate.convertAndSend( destination, aclKeySignal );
             } catch ( InterruptedException e ) {
                 logger.error( e.getMessage(), e );
