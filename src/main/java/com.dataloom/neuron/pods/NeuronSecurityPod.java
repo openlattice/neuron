@@ -34,7 +34,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 
 import com.auth0.spring.security.api.Auth0CORSFilter;
 import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
-import com.dataloom.authorization.Role;
+import com.dataloom.authorization.SystemRole;
 import com.dataloom.organizations.roles.TokenExpirationTracker;
 import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
 
@@ -83,9 +83,9 @@ public class NeuronSecurityPod extends Auth0SecurityPod {
                 .authorizeRequests()
                     .antMatchers( HttpMethod.OPTIONS ).permitAll()
                     .antMatchers( "/neuron/**" ).hasAnyAuthority(
-                            Role.ADMIN.getPrincipal().getId(),
-                            Role.ADMIN.getPrincipal().getId().toUpperCase(),
-                            Role.AUTHENTICATED_USER.getPrincipal().getId()
+                            SystemRole.ADMIN.getPrincipal().getId(),
+                            SystemRole.ADMIN.getPrincipal().getId().toUpperCase(),
+                            SystemRole.AUTHENTICATED_USER.getPrincipal().getId()
                     );
         // @formatter:on
     }
