@@ -58,8 +58,8 @@ public class SignalTerminal {
     @Scheduled( fixedDelay = 1000 )
     public void process() {
 
-        // TODO: IQueue is not a partitioned data-structure... will this be a problem?
         // TODO: multi-threading?
+        // TODO: IQueue is not a partitioned data-structure... will this be a problem?
 
         IQueue<Signal> queue = hazelcastInstance.getQueue( HazelcastQueue.SIGNAL.name() );
 
