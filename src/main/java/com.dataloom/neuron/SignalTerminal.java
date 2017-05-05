@@ -17,7 +17,7 @@
  * You can contact the owner of the copyright at support@thedataloom.com
  */
 
-package com.dataloom.neuron.synapses;
+package com.dataloom.neuron;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,18 +32,18 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.dataloom.neuron.NeuronSynapse;
-import com.dataloom.neuron.signals.AclKeySignal;
+import com.dataloom.hazelcast.HazelcastQueue;
+import com.dataloom.neuron.signals.Signal;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IQueue;
 
-import static com.dataloom.neuron.constants.SynapseConstants.ACL_KEY_SYNAPSE_PATH;
+import static com.dataloom.neuron.constants.PathConstants.ACL_KEY_PATH;
 
 @Component
 @EnableScheduling
-public class AclKeySynapse implements Synapse {
+public class SignalTerminal {
 
-    private static final Logger logger = LoggerFactory.getLogger( AclKeySynapse.class );
+    private static final Logger logger = LoggerFactory.getLogger( SignalTerminal.class );
 
     @Inject
     private HazelcastInstance hazelcastInstance;
@@ -54,33 +54,26 @@ public class AclKeySynapse implements Synapse {
     @Autowired
     private SimpUserRegistry simpUserRegistry;
 
-    @Override
+    // TODO: there must be a better way than @Scheduled to "start" the listening to the queue
     @Scheduled( fixedDelay = 1000 )
-    public void transmit() {
+    public void process() {
 
         // TODO: IQueue is not a partitioned data-structure... will this be a problem?
-        // TODO: there must be a better way than @Scheduled to "start" the listening to the queue
         // TODO: multi-threading?
 
-        IQueue<AclKeySignal> aclKeyQueue = hazelcastInstance.getQueue( NeuronSynapse.ACL_KEY.getName() );
+        IQueue<Signal> queue = hazelcastInstance.getQueue( HazelcastQueue.SIGNAL.name() );
 
         // TODO: or... while ( !queue.isEmpty() )
         while ( true ) {
             try {
-                AclKeySignal aclKeySignal = aclKeyQueue.take();
-
-                String aclKeyPath = aclKeySignal.getAclKey()
+                Signal signal = queue.take();
+                String aclKeyPath = signal.getAclKey()
                         .stream()
                         .map( UUID::toString )
                         .collect( Collectors.joining( "/" ) );
-
-                String destination = ACL_KEY_SYNAPSE_PATH + "/" + aclKeyPath;
-
-                // Set<SimpSubscription> matchingSubscriptions = simpUserRegistry.findSubscriptions(
-                //         subscription -> subscription.getDestination().equals( destination )
-                // );
-
-                simpMessagingTemplate.convertAndSend( destination, aclKeySignal );
+                // TODO: this needs to evolve to handle all types of signals, which means handling various destinations
+                String destination = ACL_KEY_PATH + "/" + aclKeyPath;
+                simpMessagingTemplate.convertAndSend( destination, signal );
             } catch ( InterruptedException e ) {
                 logger.error( e.getMessage(), e );
             }

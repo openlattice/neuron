@@ -25,14 +25,14 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.dataloom.neuron.SignalTerminal;
 import com.dataloom.neuron.configuration.WebSocketConfig;
 import com.dataloom.neuron.configuration.WebSocketSecurityConfig;
 
 @Configuration
 @ComponentScan(
-        basePackages = {
-                "com.dataloom.neuron.controllers",
-                "com.dataloom.neuron.synapses",
+        basePackageClasses = {
+                SignalTerminal.class
         },
         includeFilters = @ComponentScan.Filter(
                 value = {

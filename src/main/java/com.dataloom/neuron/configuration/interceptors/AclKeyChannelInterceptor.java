@@ -37,15 +37,15 @@ import com.dataloom.authorization.AuthorizationManager;
 import com.dataloom.authorization.AuthorizingComponent;
 import com.dataloom.authorization.Permission;
 
-import static com.dataloom.neuron.constants.SynapseConstants.ACL_KEY_SYNAPSE_PATH;
+import static com.dataloom.neuron.constants.PathConstants.ACL_KEY_PATH;
 
-public class AclKeySynapseInterceptor extends ChannelInterceptorAdapter implements AuthorizingComponent {
+public class AclKeyChannelInterceptor extends ChannelInterceptorAdapter implements AuthorizingComponent {
 
-    private static final Logger logger = LoggerFactory.getLogger( AclKeySynapseInterceptor.class );
+    private static final Logger logger = LoggerFactory.getLogger( AclKeyChannelInterceptor.class );
 
     private AuthorizationManager authorizationManager;
 
-    public AclKeySynapseInterceptor( AuthorizationManager authorizationManager ) {
+    public AclKeyChannelInterceptor( AuthorizationManager authorizationManager ) {
         this.authorizationManager = authorizationManager;
     }
 
@@ -95,14 +95,14 @@ public class AclKeySynapseInterceptor extends ChannelInterceptorAdapter implemen
     private List<UUID> parseDestinationForAclKey( String destination ) {
 
         if ( destination == null
-                || !destination.startsWith( ACL_KEY_SYNAPSE_PATH )
-                || destination.equals( ACL_KEY_SYNAPSE_PATH ) ) {
+                || !destination.startsWith( ACL_KEY_PATH )
+                || destination.equals( ACL_KEY_PATH ) ) {
             return Collections.emptyList();
         }
 
         try {
 
-            String aclKeyString = destination.substring( ACL_KEY_SYNAPSE_PATH.length() + 1 ); // +1 for the leading "/"
+            String aclKeyString = destination.substring( ACL_KEY_PATH.length() + 1 ); // +1 for the leading "/"
             String[] aclKeySplit = aclKeyString.split( "/" );
 
             if ( aclKeySplit.length <= 0 ) {

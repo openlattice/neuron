@@ -28,11 +28,11 @@ import org.springframework.context.annotation.Import;
 import com.dataloom.authorization.AuthorizationManager;
 import com.dataloom.authorization.AuthorizationQueryService;
 import com.dataloom.authorization.HazelcastAuthorizationService;
-import com.dataloom.mappers.ObjectMappers;
+import com.dataloom.neuron.Neuron;
 import com.dataloom.organizations.roles.TokenExpirationTracker;
 import com.datastax.driver.core.Session;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.EventBus;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hazelcast.core.HazelcastInstance;
 import com.kryptnostic.rhizome.configuration.cassandra.CassandraConfiguration;
 import com.kryptnostic.rhizome.pods.CassandraPod;
@@ -43,7 +43,8 @@ import digital.loom.rhizome.configuration.auth0.Auth0Configuration;
 @Configuration
 @Import( {
         Auth0Pod.class,
-        CassandraPod.class
+        CassandraPod.class,
+        NeuronPod.class
 } )
 public class NeuronServicesPod {
 
@@ -60,21 +61,22 @@ public class NeuronServicesPod {
     private HazelcastInstance hazelcastInstance;
 
     @Inject
+    private ListeningExecutorService executor;
+
+    @Inject
+    private Neuron neuron;
+
+    @Inject
     private Session session;
 
     @Bean
-    public ObjectMapper defaultObjectMapper() {
-        return ObjectMappers.getJsonMapper();
+    public AuthorizationManager authorizationManager() {
+        return new HazelcastAuthorizationService( hazelcastInstance, authorizationQueryService(), eventBus );
     }
 
     @Bean
     public AuthorizationQueryService authorizationQueryService() {
         return new AuthorizationQueryService( cassandraConfiguration.getKeyspace(), session, hazelcastInstance );
-    }
-
-    @Bean
-    public AuthorizationManager authorizationManager() {
-        return new HazelcastAuthorizationService( hazelcastInstance, authorizationQueryService(), eventBus );
     }
 
     @Bean

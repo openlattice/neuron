@@ -35,7 +35,7 @@ import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import com.dataloom.authorization.AuthorizationManager;
-import com.dataloom.neuron.configuration.interceptors.AclKeySynapseInterceptor;
+import com.dataloom.neuron.configuration.interceptors.AclKeyChannelInterceptor;
 
 import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_APPLICATION_DESTINATION_PATH;
 import static com.dataloom.neuron.constants.WebSocketConstants.DEFAULT_BROKER_PATH;
@@ -67,7 +67,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel( ChannelRegistration registration ) {
 
-        registration.setInterceptors( new AclKeySynapseInterceptor( authorizationManager ) );
+        registration.setInterceptors( new AclKeyChannelInterceptor( authorizationManager ) );
     }
 
     @Bean

@@ -20,6 +20,7 @@
 package com.dataloom.neuron;
 
 import com.dataloom.hazelcast.pods.SharedStreamSerializersPod;
+import com.dataloom.neuron.pods.NeuronPod;
 import com.dataloom.neuron.pods.NeuronSecurityPod;
 import com.dataloom.neuron.pods.NeuronServicesPod;
 import com.dataloom.neuron.pods.NeuronServletsPod;
@@ -31,7 +32,7 @@ import digital.loom.rhizome.authentication.Auth0Pod;
 
 import static com.kryptnostic.rhizome.core.RhizomeApplicationServer.DEFAULT_PODS;
 
-public class Neuron extends BaseRhizomeServer {
+public class NeuronServer extends BaseRhizomeServer {
 
     public static final Class<?>[] extraPods = new Class<?>[] {
             Auth0Pod.class,
@@ -40,12 +41,13 @@ public class Neuron extends BaseRhizomeServer {
     };
 
     public static final Class<?>[] neuronPods = new Class<?>[] {
+            NeuronPod.class,
             NeuronSecurityPod.class,
             NeuronServicesPod.class,
             NeuronServletsPod.class
     };
 
-    public Neuron( Class<?>... pods ) {
+    public NeuronServer( Class<?>... pods ) {
 
         super( Pods.concatenate(
                 pods,
@@ -57,6 +59,6 @@ public class Neuron extends BaseRhizomeServer {
 
     public static void main( String[] args ) throws Exception {
 
-        new Neuron().start( args );
+        new NeuronServer().start( args );
     }
 }
