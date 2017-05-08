@@ -1,0 +1,27 @@
+##
+# Rhizome Bootstrap Configuration
+##
+
+# Set to false to disable persistence
+enable-persistence:  false
+session-clustering-enabled: false
+
+cors-access-control-allow-origin-url: "http://localhost:9000"
+
+cassandra:
+    embedded: true
+    random-ports: true
+    ssl-enabled: false
+    keyspace: "sparks"
+    replication-factor: 1
+    consistency-level: ONE
+    seed-nodes:
+        - "cassandra"
+
+hazelcast:
+    server: false
+    group: "local"
+    password: "kryptodoge4life"
+    seed-nodes:
+        - "conductor"
+
