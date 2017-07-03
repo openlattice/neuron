@@ -9,19 +9,19 @@ session-clustering-enabled: false
 cors-access-control-allow-origin-url: "http://localhost:9000"
 
 cassandra:
-    embedded: false
-    random-ports: false
+    embedded: true
+    random-ports: true
     ssl-enabled: false
     keyspace: "sparks"
     replication-factor: 1
     consistency-level: ONE
     seed-nodes:
-        - "localhost"
+        - "cassandra"
 
 hazelcast:
     server: false
     group: "local"
     password: "kryptodoge4life"
     seed-nodes:
-        - "localhost"
+        - "conductor"
 
