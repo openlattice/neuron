@@ -19,15 +19,15 @@
 
 package com.dataloom.neuron.pods;
 
+import com.dataloom.neuron.SignalTerminal;
+import com.dataloom.neuron.configuration.WebSocketConfig;
+import com.dataloom.neuron.configuration.WebSocketSecurityConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
-import com.dataloom.neuron.SignalTerminal;
-import com.dataloom.neuron.configuration.WebSocketConfig;
-import com.dataloom.neuron.configuration.WebSocketSecurityConfig;
 
 @Configuration
 @ComponentScan(
@@ -46,4 +46,13 @@ import com.dataloom.neuron.configuration.WebSocketSecurityConfig;
         WebSocketConfig.class,
         WebSocketSecurityConfig.class
 } )
-public class NeuronMvcPod extends WebMvcConfigurationSupport {}
+public class NeuronMvcPod extends WebMvcConfigurationSupport {
+    @Override
+    protected void addCorsMappings( CorsRegistry registry ) {
+        registry
+                .addMapping( "/**" )
+                .allowedMethods( "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH" )
+                .allowedOrigins( "*" );
+        super.addCorsMappings( registry );
+    }
+}
