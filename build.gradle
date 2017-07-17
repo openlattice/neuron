@@ -52,6 +52,10 @@ if( DS_XMX == 'null' || DS_XMX == null || DS_XMX == "" ) {
     DS_XMX = '-Xms4g'
 }
 
+if( N_ARGS == 'null' || N_ARGS == null || N_ARGS == "" ) {
+    N_ARGS = 'local cassandra'
+}
+
 println "Using java args for running ${projectName}: Xms=" + DS_XMS + ",Xmx=" + DS_XMX + " -server"
 
 applicationDefaultJvmArgs = [DS_XMS, DS_XMX, "-server"]
@@ -63,10 +67,10 @@ run {
         args N_ARGS.split();
     } else if(System.getProperty("exec.args") != null) {
         args System.getProperty("exec.args").split()
-    } else {
-        args = ["local","cassandra"]
     }
 }
+
+println "Enabled profiles: " + Arrays.toString(run.args)
 
 configurations {
     tests
