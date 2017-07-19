@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017. Kryptnostic, Inc (dba Loom)
+ * Copyright (C) 2017. OpenLattice, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * You can contact the owner of the copyright at support@thedataloom.com
+ * You can contact the owner of the copyright at support@openlattice.com
  */
 
 plugins {
@@ -40,25 +40,25 @@ apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptn
 
 mainClassName = "com.dataloom.neuron.NeuronServer"
 
-def DS_XMS = "$System.env.NEURON_XMS"
-def DS_XMX = "$System.env.NEURON_XMX"
+def N_XMS = "$System.env.NEURON_XMS"
+def N_XMX = "$System.env.NEURON_XMX"
 def N_ARGS = "$System.env.NEURON_ARGS"
 
-if( DS_XMS == 'null' || DS_XMS == null || DS_XMS == "" ) {
-    DS_XMS = '-Xms1g'
+if( N_XMS == 'null' || N_XMS == null || N_XMS == "" ) {
+    N_XMS = '-Xms1g'
 }
 
-if( DS_XMX == 'null' || DS_XMX == null || DS_XMX == "" ) {
-    DS_XMX = '-Xms4g'
+if( N_XMX == 'null' || N_XMX == null || N_XMX == "" ) {
+    N_XMX = '-Xms4g'
 }
 
 if( N_ARGS == 'null' || N_ARGS == null || N_ARGS == "" ) {
     N_ARGS = 'local cassandra'
 }
 
-println "Using java args for running ${projectName}: Xms=" + DS_XMS + ",Xmx=" + DS_XMX + " -server"
+println "Using java args for running ${projectName}: Xms=" + N_XMS + ",Xmx=" + N_XMX + " -server"
 
-applicationDefaultJvmArgs = [DS_XMS, DS_XMX, "-server"]
+applicationDefaultJvmArgs = [N_XMS, N_XMX, "-server"]
 sourceCompatibility=JavaVersion.VERSION_1_8
 targetCompatibility=JavaVersion.VERSION_1_8
 
