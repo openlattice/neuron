@@ -22,6 +22,8 @@ package com.dataloom.neuron.pods;
 import java.net.URI;
 import javax.inject.Inject;
 
+import com.dataloom.organizations.roles.SecurePrincipalsManager;
+import jnr.ffi.annotations.In;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,11 +53,11 @@ public class NeuronSecurityPod extends Auth0SecurityPod {
     protected RhizomeConfiguration rhizomeConfiguration;
 
     @Inject
-    TokenExpirationTracker tokenTracker;
+    SecurePrincipalsManager principalsManager;
 
     @Override
     protected ConfigurableAuth0AuthenticationProvider getAuthenticationProvider() {
-        return new LoomAuth0AuthenticationProvider( getAuthenticationApiClient(), tokenTracker );
+        return new LoomAuth0AuthenticationProvider( getAuthenticationApiClient(), principalsManager );
     }
 
     @Override

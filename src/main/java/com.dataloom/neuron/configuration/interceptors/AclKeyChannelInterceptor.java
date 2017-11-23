@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.openlattice.authorization.AclKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -67,7 +68,7 @@ public class AclKeyChannelInterceptor extends ChannelInterceptorAdapter implemen
              * SubscriptionRegistry, and therefore, this SUBSCRIBE frame is effectively rejected
              */
 
-            List<UUID> aclKey = parseDestinationForAclKey( accessor.getDestination() );
+            AclKey aclKey = parseDestinationForAclKey( accessor.getDestination() );
             if ( aclKey.isEmpty() ) {
                 return null;
             }
@@ -92,12 +93,12 @@ public class AclKeyChannelInterceptor extends ChannelInterceptorAdapter implemen
     }
 
     // TODO: make this more robust, write unit tests, move to a shared location
-    private List<UUID> parseDestinationForAclKey( String destination ) {
+    private AclKey parseDestinationForAclKey( String destination ) {
 
         if ( destination == null
                 || !destination.startsWith( ACL_KEY_PATH )
                 || destination.equals( ACL_KEY_PATH ) ) {
-            return Collections.emptyList();
+            return new AclKey();
         }
 
         try {
@@ -106,17 +107,17 @@ public class AclKeyChannelInterceptor extends ChannelInterceptorAdapter implemen
             String[] aclKeySplit = aclKeyString.split( "/" );
 
             if ( aclKeySplit.length <= 0 ) {
-                return Collections.emptyList();
+                return new AclKey();
             }
 
-            List<UUID> aclKey = Arrays
+            AclKey aclKey = new AclKey( Arrays
                     .stream( aclKeySplit )
                     .map( UUID::fromString )
-                    .collect( Collectors.toList() );
+                    .collect( Collectors.toList() ) );
 
             return aclKey;
         } catch ( Exception e ) {
-            return Collections.emptyList();
+            return new AclKey();
         }
     }
 }
