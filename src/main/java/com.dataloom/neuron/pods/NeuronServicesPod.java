@@ -19,31 +19,30 @@
 
 package com.dataloom.neuron.pods;
 
-import javax.inject.Inject;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
 import com.dataloom.authorization.AuthorizationManager;
 import com.dataloom.authorization.AuthorizationQueryService;
+import com.dataloom.authorization.HazelcastAclKeyReservationService;
 import com.dataloom.authorization.HazelcastAuthorizationService;
 import com.dataloom.neuron.Neuron;
+import com.dataloom.organizations.roles.HazelcastPrincipalService;
+import com.dataloom.organizations.roles.SecurePrincipalsManager;
 import com.dataloom.organizations.roles.TokenExpirationTracker;
-import com.datastax.driver.core.Session;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hazelcast.core.HazelcastInstance;
 import com.kryptnostic.rhizome.configuration.cassandra.CassandraConfiguration;
-import com.kryptnostic.rhizome.pods.CassandraPod;
-
+import com.zaxxer.hikari.HikariDataSource;
 import digital.loom.rhizome.authentication.Auth0Pod;
 import digital.loom.rhizome.configuration.auth0.Auth0Configuration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import javax.inject.Inject;
 
 @Configuration
 @Import( {
         Auth0Pod.class,
-        CassandraPod.class,
         NeuronPod.class
 } )
 public class NeuronServicesPod {
@@ -67,7 +66,7 @@ public class NeuronServicesPod {
     private Neuron neuron;
 
     @Inject
-    private Session session;
+    private HikariDataSource hikariDataSource;
 
     @Bean
     public AuthorizationManager authorizationManager() {
@@ -75,8 +74,20 @@ public class NeuronServicesPod {
     }
 
     @Bean
+    public HazelcastAclKeyReservationService aclKeyReservationService() {
+        return new HazelcastAclKeyReservationService( hazelcastInstance );
+    }
+
+    @Bean
     public AuthorizationQueryService authorizationQueryService() {
-        return new AuthorizationQueryService( cassandraConfiguration.getKeyspace(), session, hazelcastInstance );
+        return new AuthorizationQueryService( hikariDataSource, hazelcastInstance );
+    }
+
+    @Bean
+    public SecurePrincipalsManager principalService() {
+        return new HazelcastPrincipalService( hazelcastInstance,
+                aclKeyReservationService(),
+                authorizationManager() );
     }
 
     @Bean
