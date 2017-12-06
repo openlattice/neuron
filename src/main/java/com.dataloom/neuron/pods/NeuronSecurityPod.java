@@ -19,11 +19,16 @@
 
 package com.dataloom.neuron.pods;
 
+import com.auth0.spring.security.api.Auth0CORSFilter;
+import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
+import com.dataloom.authorization.SystemRole;
+import com.dataloom.organizations.roles.SecurePrincipalsManager;
+import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
+import digital.loom.rhizome.authentication.Auth0SecurityPod;
+import digital.loom.rhizome.authentication.ConfigurableAuth0AuthenticationProvider;
+import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
 import java.net.URI;
 import javax.inject.Inject;
-
-import com.dataloom.organizations.roles.SecurePrincipalsManager;
-import jnr.ffi.annotations.In;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,16 +38,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.StaticAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-
-import com.auth0.spring.security.api.Auth0CORSFilter;
-import com.dataloom.authentication.LoomAuth0AuthenticationProvider;
-import com.dataloom.authorization.SystemRole;
-import com.dataloom.organizations.roles.TokenExpirationTracker;
-import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
-
-import digital.loom.rhizome.authentication.Auth0SecurityPod;
-import digital.loom.rhizome.authentication.ConfigurableAuth0AuthenticationProvider;
-import digital.loom.rhizome.authentication.ConfigurableAuth0CORSFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity( prePostEnabled = true )

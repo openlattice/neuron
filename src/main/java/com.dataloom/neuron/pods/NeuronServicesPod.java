@@ -89,9 +89,4 @@ public class NeuronServicesPod {
                 aclKeyReservationService(),
                 authorizationManager() );
     }
-
-    @Bean
-    public TokenExpirationTracker tokenTracker() {
-        return new TokenExpirationTracker( hazelcastInstance );
-    }
 }
