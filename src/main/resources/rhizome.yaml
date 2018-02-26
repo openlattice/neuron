@@ -1,0 +1,17 @@
+##
+# Rhizome Bootstrap Configuration
+##
+
+# Set to false to disable persistence
+enable-persistence:  false
+session-clustering-enabled: false
+
+cors-access-control-allow-origin-url: "http://localhost:9000"
+
+hazelcast:
+    server: false
+    group: "local"
+    password: "trellis"
+    seed-nodes:
+        - "conductor"
+
