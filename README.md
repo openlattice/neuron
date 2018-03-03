@@ -1,2 +1,2 @@
 # neuron
-Handles events and notifications
+Handles events and notifications (SMS, e-mail, push)
