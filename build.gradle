@@ -20,10 +20,12 @@
 plugins {
   id 'application'
   id 'java'
-  id 'org.jetbrains.kotlin.jvm' version '1.2.30'
   id 'eclipse'
   id 'idea'
   id 'jacoco'
+  id 'com.github.spotbugs' version '1.6.2'
+  id 'org.jetbrains.kotlin.jvm' version '1.2.51'
+  id 'org.jetbrains.kotlin.plugin.spring' version '1.2.51'
 }
 
 description = "Neuron Server"
@@ -38,7 +40,6 @@ distTar {
 }
 
 apply from: "https://raw.githubusercontent.com/openlattice/gradles/master/openlattice.gradle"
-apply plugin: 'kotlin'
 
 mainClassName = "com.openlattice.neuron.NeuronServer"
 
