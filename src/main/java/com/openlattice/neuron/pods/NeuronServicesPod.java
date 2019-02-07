@@ -82,11 +82,11 @@ public class NeuronServicesPod {
     public AuthorizationQueryService authorizationQueryService() {
         return new AuthorizationQueryService( hikariDataSource, hazelcastInstance );
     }
-
-    @Bean
-    public SecurePrincipalsManager principalService() {
-        return new HazelcastPrincipalService( hazelcastInstance,
-                aclKeyReservationService(),
-                authorizationManager() );
-    }
+//
+//    @Bean
+//    public SecurePrincipalsManager principalService() {
+//        return new HazelcastPrincipalService( hazelcastInstance,
+//                aclKeyReservationService(),
+//                authorizationManager() );
+//    }
 }
