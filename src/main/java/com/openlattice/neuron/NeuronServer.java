@@ -26,9 +26,7 @@ import static com.kryptnostic.rhizome.core.RhizomeApplicationServer.DEFAULT_PODS
 import com.kryptnostic.rhizome.configuration.websockets.BaseRhizomeServer;
 import com.kryptnostic.rhizome.hazelcast.serializers.RhizomeUtils.Pods;
 import com.openlattice.auth0.Auth0Pod;
-import com.openlattice.conductor.codecs.pods.TypeCodecsPod;
 import com.openlattice.hazelcast.pods.SharedStreamSerializersPod;
-import com.openlattice.neuron.pods.NeuronPod;
 import com.openlattice.neuron.pods.NeuronSecurityPod;
 import com.openlattice.neuron.pods.NeuronServicesPod;
 import com.openlattice.neuron.pods.NeuronServletsPod;
@@ -38,11 +36,9 @@ public class NeuronServer extends BaseRhizomeServer {
     public static final Class<?>[] extraPods = new Class<?>[] {
             Auth0Pod.class,
             SharedStreamSerializersPod.class,
-            TypeCodecsPod.class
     };
 
     public static final Class<?>[] neuronPods = new Class<?>[] {
-            NeuronPod.class,
             NeuronSecurityPod.class,
             NeuronServicesPod.class,
             NeuronServletsPod.class

@@ -31,9 +31,6 @@ import com.openlattice.authorization.AuthorizationManager;
 import com.openlattice.authorization.AuthorizationQueryService;
 import com.openlattice.authorization.HazelcastAclKeyReservationService;
 import com.openlattice.authorization.HazelcastAuthorizationService;
-import com.openlattice.neuron.Neuron;
-import com.openlattice.organizations.roles.HazelcastPrincipalService;
-import com.openlattice.organizations.roles.SecurePrincipalsManager;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.inject.Inject;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +40,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import( {
         Auth0Pod.class,
-        NeuronPod.class
 } )
 public class NeuronServicesPod {
 
@@ -61,9 +57,6 @@ public class NeuronServicesPod {
 
     @Inject
     private ListeningExecutorService executor;
-
-    @Inject
-    private Neuron neuron;
 
     @Inject
     private HikariDataSource hikariDataSource;

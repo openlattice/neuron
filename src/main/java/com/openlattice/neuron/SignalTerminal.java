@@ -21,14 +21,7 @@
 
 package com.openlattice.neuron;
 
-import static com.openlattice.neuron.constants.PathConstants.ACL_KEY_PATH;
-
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IQueue;
-import com.openlattice.hazelcast.HazelcastQueue;
-import com.openlattice.neuron.signals.Signal;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,25 +51,25 @@ public class SignalTerminal {
     @Scheduled( fixedDelay = 1000 )
     public void process() {
 
-        // TODO: multi-threading?
-        // TODO: IQueue is not a partitioned data-structure... will this be a problem?
-
-        IQueue<Signal> queue = hazelcastInstance.getQueue( HazelcastQueue.SIGNAL.name() );
-
-        // TODO: or... while ( !queue.isEmpty() )
-        while ( true ) {
-            try {
-                Signal signal = queue.take();
-                String aclKeyPath = signal.getAclKey()
-                        .stream()
-                        .map( UUID::toString )
-                        .collect( Collectors.joining( "/" ) );
-                // TODO: this needs to evolve to handle all types of signals, which means handling various destinations
-                String destination = ACL_KEY_PATH + "/" + aclKeyPath;
-                simpMessagingTemplate.convertAndSend( destination, signal );
-            } catch ( InterruptedException e ) {
-                logger.error( e.getMessage(), e );
-            }
-        }
+//        // TODO: multi-threading?
+//        // TODO: IQueue is not a partitioned data-structure... will this be a problem?
+//
+//        IQueue<Signal> queue = hazelcastInstance.getQueue( HazelcastQueue.SIGNAL.name() );
+//
+//        // TODO: or... while ( !queue.isEmpty() )
+//        while ( true ) {
+//            try {
+//                Signal signal = queue.take();
+//                String aclKeyPath = signal.getAclKey()
+//                        .stream()
+//                        .map( UUID::toString )
+//                        .collect( Collectors.joining( "/" ) );
+//                // TODO: this needs to evolve to handle all types of signals, which means handling various destinations
+//                String destination = ACL_KEY_PATH + "/" + aclKeyPath;
+//                simpMessagingTemplate.convertAndSend( destination, signal );
+//            } catch ( InterruptedException e ) {
+//                logger.error( e.getMessage(), e );
+//            }
+//        }
     }
 }
