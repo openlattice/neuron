@@ -62,8 +62,8 @@ if( N_ARGS == 'null' || N_ARGS == null || N_ARGS == "" ) {
 println "Using java args for running ${projectName}: Xms=" + N_XMS + ",Xmx=" + N_XMX + " -server"
 
 applicationDefaultJvmArgs = [N_XMS, N_XMX, "-server"]
-sourceCompatibility=JavaVersion.VERSION_1_8
-targetCompatibility=JavaVersion.VERSION_1_8
+sourceCompatibility=JavaVersion.VERSION_11
+targetCompatibility=JavaVersion.VERSION_11
 
 run {
     if( N_ARGS != null ) {
@@ -122,8 +122,8 @@ eclipse {
     ext.downloadSources = true
     ext.downloadJavadoc = true
 
-    ext.sourceCompatibility=JavaVersion.VERSION_1_8
-    ext.targetCompatibility=JavaVersion.VERSION_1_8
+    ext.sourceCompatibility=JavaVersion.VERSION_11
+    ext.targetCompatibility=JavaVersion.VERSION_11
 }
 
 compileKotlin {
