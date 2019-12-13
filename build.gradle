@@ -85,6 +85,13 @@ run {
 
 println "Enabled profiles: " + Arrays.toString(run.args)
 
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
 configurations {
     tests
       published.extendsFrom tests, archives

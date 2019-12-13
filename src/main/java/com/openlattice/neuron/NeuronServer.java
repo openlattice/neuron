@@ -33,18 +33,18 @@ import com.openlattice.neuron.pods.NeuronServletsPod;
 
 public class NeuronServer extends BaseRhizomeServer {
 
-    public static final Class<?>[] extraPods = new Class<?>[] {
+    private static final Class<?>[] extraPods = new Class<?>[] {
             Auth0Pod.class,
             SharedStreamSerializersPod.class,
     };
 
-    public static final Class<?>[] neuronPods = new Class<?>[] {
+    private static final Class<?>[] neuronPods = new Class<?>[] {
             NeuronSecurityPod.class,
             NeuronServicesPod.class,
             NeuronServletsPod.class
     };
 
-    public NeuronServer( Class<?>... pods ) {
+    private NeuronServer( Class<?>... pods ) {
 
         super( Pods.concatenate(
                 pods,
