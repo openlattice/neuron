@@ -24,6 +24,7 @@ package com.openlattice.neuron.pods;
 import com.openlattice.neuron.SignalTerminal;
 import com.openlattice.neuron.configuration.WebSocketConfig;
 import com.openlattice.neuron.configuration.WebSocketSecurityConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -49,6 +50,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
         WebSocketSecurityConfig.class
 } )
 public class NeuronMvcPod extends WebMvcConfigurationSupport {
+
+    // TODO(LATTICE-2346): We need to lock this down. Since all endpoints are stateless + authenticated this is more a
+    // defense-in-depth measure.
+    @SuppressFBWarnings(
+            value = {"PERMISSIVE_CORS"},
+            justification = "LATTICE-2346"
+    )
     @Override
     protected void addCorsMappings( CorsRegistry registry ) {
         registry
