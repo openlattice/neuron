@@ -24,7 +24,6 @@ package com.openlattice.neuron.pods;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hazelcast.core.HazelcastInstance;
-import com.kryptnostic.rhizome.configuration.cassandra.CassandraConfiguration;
 import com.openlattice.auth0.Auth0Pod;
 import com.openlattice.authentication.Auth0Configuration;
 import com.openlattice.authorization.AuthorizationManager;
@@ -45,9 +44,6 @@ public class NeuronServicesPod {
 
     @Inject
     private Auth0Configuration auth0Configuration;
-
-    @Inject
-    private CassandraConfiguration cassandraConfiguration;
 
     @Inject
     private EventBus eventBus;
