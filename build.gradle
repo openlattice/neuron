@@ -58,7 +58,7 @@ if( N_XMX == 'null' || N_XMX == null || N_XMX == "" ) {
 }
 
 if( N_ARGS == 'null' || N_ARGS == null || N_ARGS == "" ) {
-    N_ARGS = 'local cassandra'
+    N_ARGS = 'local'
 }
 
 println "Using java args for running ${projectName}: Xms=" + N_XMS + ",Xmx=" + N_XMX + " -server"
