@@ -27,14 +27,14 @@ import com.hazelcast.core.HazelcastInstance;
 import com.openlattice.auth0.Auth0Pod;
 import com.openlattice.authentication.Auth0Configuration;
 import com.openlattice.authorization.AuthorizationManager;
-import com.openlattice.authorization.AuthorizationQueryService;
 import com.openlattice.authorization.HazelcastAclKeyReservationService;
 import com.openlattice.authorization.HazelcastAuthorizationService;
 import com.zaxxer.hikari.HikariDataSource;
-import javax.inject.Inject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import javax.inject.Inject;
 
 @Configuration
 @Import( {
@@ -59,7 +59,7 @@ public class NeuronServicesPod {
 
     @Bean
     public AuthorizationManager authorizationManager() {
-        return new HazelcastAuthorizationService( hazelcastInstance, authorizationQueryService(), eventBus );
+        return new HazelcastAuthorizationService( hazelcastInstance, eventBus );
     }
 
     @Bean
@@ -67,10 +67,6 @@ public class NeuronServicesPod {
         return new HazelcastAclKeyReservationService( hazelcastInstance );
     }
 
-    @Bean
-    public AuthorizationQueryService authorizationQueryService() {
-        return new AuthorizationQueryService( hikariDataSource, hazelcastInstance );
-    }
 //
 //    @Bean
 //    public SecurePrincipalsManager principalService() {
