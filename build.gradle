@@ -31,7 +31,7 @@ plugins {
 }
 
 description = "Neuron Server"
-group = "com.OpenLattice"
+group = "com.openlattice"
 ext.projectName = "neuron"
 ext.scmUrl = 'scm:git:https://github.com/openlattice/neuron.git'
 ext.connectionUrl = 'scm:git:https://github.com/openlattice/neuron.git'
