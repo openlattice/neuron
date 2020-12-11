@@ -89,7 +89,7 @@ spotbugs {
     reportLevel = 'high'
     toolVersion = "${spotbugs_annotations_version}"
 }
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+spotbugsMain {
     reports {
         xml.enabled = false
         html.enabled = true
@@ -114,16 +114,16 @@ dependencies {
         compile project(":conductor-client")
         compile project(":api")
         compile project(":rhizome")
-        testCompile( project(path: ":api", configuration: "tests"))
-        testCompile( project(path: ":rhizome", configuration: "tests"))
+        testImplementation( project(path: ":api", configuration: "tests"))
+        testImplementation( project(path: ":rhizome", configuration: "tests"))
     } else {
         logger.quiet(project.name + " using jar dependencies.")
         compile "com.openlattice:conductor-client:${conductor_client_version}"
         compile "com.openlattice:api:${api_version}"
         compile "com.openlattice:rhizome:${rhizome_version}"
 
-        testCompile "com.openlattice:api:${api_version}:tests"
-        testCompile "com.openlattice:rhizome:${rhizome_version}:tests"
+        testImplementation "com.openlattice:api:${api_version}:tests"
+        testImplementation "com.openlattice:rhizome:${rhizome_version}:tests"
     }
 
     compile "org.apache.olingo:odata-server-api:${odata_version}"
@@ -134,8 +134,8 @@ dependencies {
     /*
      * TESTING
      */
-    testCompile "junit:junit:${junit_version}"
-    testCompile( "org.mockito:mockito-all:${mockito_version}" ) {
+    testImplementation "junit:junit:${junit_version}"
+    testImplementation( "org.mockito:mockito-all:${mockito_version}" ) {
         exclude module : 'hamcrest'
         exclude module : 'hamcrest-core'
     }
