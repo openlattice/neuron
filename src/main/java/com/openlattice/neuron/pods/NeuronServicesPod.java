@@ -26,9 +26,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hazelcast.core.HazelcastInstance;
 import com.openlattice.auth0.Auth0Pod;
 import com.openlattice.authentication.Auth0Configuration;
-import com.openlattice.authorization.AuthorizationManager;
 import com.openlattice.authorization.HazelcastAclKeyReservationService;
-import com.openlattice.authorization.HazelcastAuthorizationService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,11 +54,6 @@ public class NeuronServicesPod {
 
     @Inject
     private HikariDataSource hikariDataSource;
-
-    @Bean
-    public AuthorizationManager authorizationManager() {
-        return new HazelcastAuthorizationService( hazelcastInstance, eventBus );
-    }
 
     @Bean
     public HazelcastAclKeyReservationService aclKeyReservationService() {
