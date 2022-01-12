@@ -27,8 +27,13 @@ plugins {
   id 'checkstyle'
   id 'signing'
   id 'com.github.spotbugs' version '4.6.0'
+<<<<<<< HEAD
   id 'org.jetbrains.kotlin.jvm' version '1.5.10'
   id 'org.jetbrains.kotlin.plugin.spring' version '1.5.10'
+=======
+  id 'org.jetbrains.kotlin.jvm'
+  id 'org.jetbrains.kotlin.plugin.spring'
+>>>>>>> develop
 }
 
 description = "Neuron Server"
@@ -65,7 +70,8 @@ if( N_ARGS == 'null' || N_ARGS == null || N_ARGS == "" ) {
 println "Using java args for running ${projectName}: Xms=" + N_XMS + ",Xmx=" + N_XMX + " -server"
 
 applicationDefaultJvmArgs = [N_XMS, N_XMX, "-server"]
-applicationDefaultJvmArgs += [ "--add-modules", "java.se",
+applicationDefaultJvmArgs += [ "--add-modules", "java.base",
+                               "--add-modules", "java.se",
                                "--add-exports","java.base/jdk.internal.ref=ALL-UNNAMED",
                                "--add-opens","java.base/java.lang=ALL-UNNAMED",
                                "--add-opens","java.base/java.nio=ALL-UNNAMED",
@@ -125,6 +131,10 @@ dependencies {
     implementation "com.openlattice:conductor-client:${conductor_client_version}"
     implementation "com.openlattice:api:${api_version}"
     implementation "com.openlattice:rhizome:${rhizome_version}"
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     if ( project.hasProperty('developmentMode') && project.developmentMode ) {
         logger.quiet(project.name + " using project dependencies.")
         testImplementation( project(path: ":api", configuration: "tests"))
@@ -148,29 +158,36 @@ dependencies {
         exclude module : 'hamcrest'
         exclude module : 'hamcrest-core'
     }
+<<<<<<< HEAD
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+=======
+>>>>>>> develop
 }
 
 tasks.withType(JavaCompile) {
-    options.compilerArgs+= [ "--add-modules", "java.se",
-                             "--add-exports","java.base/jdk.internal.ref=ALL-UNNAMED",
-                             "--add-opens","java.base/java.lang=ALL-UNNAMED",
-                             "--add-opens","java.base/java.nio=ALL-UNNAMED",
-                             "--add-opens","java.base/sun.nio.ch=ALL-UNNAMED",
-                             "--add-opens","java.management/sun.management=ALL-UNNAMED",
-                             "--add-opens","jdk.management/com.sun.management.internal=ALL-UNNAMED"]
+    options.compilerArgs+= ["--add-modules", "java.base",
+                            "--add-modules", "java.se",
+                            "--add-exports","java.base/jdk.internal.ref=ALL-UNNAMED"]
 }
 
 tasks.withType(Test) {
-    jvmArgs += [ "--add-modules", "java.se",
-                 "--add-exports","java.base/jdk.internal.ref=ALL-UNNAMED",
-                 "--add-opens","java.base/java.lang=ALL-UNNAMED",
-                 "--add-opens","java.base/java.nio=ALL-UNNAMED",
-                 "--add-opens","java.base/sun.nio.ch=ALL-UNNAMED",
-                 "--add-opens","java.management/sun.management=ALL-UNNAMED",
-                 "--add-opens","jdk.management/com.sun.management.internal=ALL-UNNAMED"]
+    jvmArgs += ["--add-modules", "java.base",
+                "--add-modules", "java.se",
+                "--add-exports","java.base/jdk.internal.ref=ALL-UNNAMED",
+                "--add-opens","java.base/java.lang=ALL-UNNAMED",
+                "--add-opens","java.base/java.nio=ALL-UNNAMED",
+                "--add-opens","java.base/sun.nio.ch=ALL-UNNAMED",
+                "--add-opens","java.management/sun.management=ALL-UNNAMED",
+                "--add-opens", "jdk.management/com.ibm.lang.management.internal=ALL-UNNAMED",
+                "--add-opens","jdk.management/com.sun.management.internal=ALL-UNNAMED"]
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs += '-Xjvm-default=compatibility'
+    }
+}
 
 eclipse {
     ext.downloadSources = true
@@ -178,16 +195,4 @@ eclipse {
 
     ext.sourceCompatibility=JavaVersion.VERSION_11
     ext.targetCompatibility=JavaVersion.VERSION_11
-}
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += '-Xjvm-default=compatibility'
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
