@@ -21,11 +21,11 @@
 
 package com.openlattice.neuron;
 
-import static com.kryptnostic.rhizome.core.RhizomeApplicationServer.DEFAULT_PODS;
+import static com.geekbeast.rhizome.core.RhizomeApplicationServer.DEFAULT_PODS;
 
-import com.kryptnostic.rhizome.configuration.websockets.BaseRhizomeServer;
-import com.kryptnostic.rhizome.hazelcast.serializers.RhizomeUtils.Pods;
-import com.openlattice.auth0.Auth0Pod;
+import com.geekbeast.rhizome.configuration.websockets.BaseRhizomeServer;
+import com.geekbeast.rhizome.hazelcast.serializers.RhizomeUtils.Pods;
+import com.geekbeast.auth0.Auth0Pod;
 import com.openlattice.hazelcast.pods.SharedStreamSerializersPod;
 import com.openlattice.neuron.pods.NeuronSecurityPod;
 import com.openlattice.neuron.pods.NeuronServicesPod;
