@@ -21,18 +21,17 @@
 
 package com.openlattice.neuron.pods;
 
+import com.geekbeast.auth0.Auth0Pod;
+import com.geekbeast.authentication.Auth0Configuration;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hazelcast.core.HazelcastInstance;
-import com.openlattice.auth0.Auth0Pod;
-import com.openlattice.authentication.Auth0Configuration;
 import com.openlattice.authorization.HazelcastAclKeyReservationService;
 import com.zaxxer.hikari.HikariDataSource;
+import javax.inject.Inject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import javax.inject.Inject;
 
 @Configuration
 @Import( {

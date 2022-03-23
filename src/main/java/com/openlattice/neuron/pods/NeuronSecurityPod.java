@@ -21,8 +21,8 @@
 
 package com.openlattice.neuron.pods;
 
-import com.kryptnostic.rhizome.configuration.RhizomeConfiguration;
-import com.openlattice.auth0.Auth0SecurityPod;
+import com.geekbeast.auth0.Auth0SecurityPod;
+import com.geekbeast.rhizome.configuration.RhizomeConfiguration;
 import com.openlattice.authorization.SystemRole;
 import com.openlattice.organizations.roles.SecurePrincipalsManager;
 import java.net.URI;
